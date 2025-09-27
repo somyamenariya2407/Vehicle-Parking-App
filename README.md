@@ -1,4 +1,4 @@
-## Vehicle Parking Management App - V1
+## Vehicle Parking Management App 
 
 
 # Vehicle-Parking-App 
@@ -25,6 +25,7 @@ A multi-user Flask-based web application to manage 4-wheeler vehicle parking lot
 -> see parking history with details
 
 ## Technologies Used
+
 -> **FLASK**: Backend web framework
 -> **SQLAlchemy & Flask-SQLAlchemy**: ORM for database management
 -> **SQLite**: Database engine
@@ -35,11 +36,17 @@ A multi-user Flask-based web application to manage 4-wheeler vehicle parking lot
 ### How to launch the app:
 
 step1-> set the directory in which all the files are present (ex. cd .\Vehicle-Parking-App\ )
+
 step2-> set the virtual environment (python -m venv venv)
+
 step3->Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass (give permission for virtual environment to start)
+
 step4-> .\venv\Scripts\activate  (activate the environment)
+
 step5-> if ur new download the packages from requirement.txt (pip install -r requirement.txt)
+
 step6-> python app.py   (run the app by this)
+
 step7-> after all work done at last close the virtual environment (deactivate)
 
 ## Milestones
@@ -122,74 +129,74 @@ Used Bootstrap for responsive design across devices.
 
 ## Folder Structure
 
-D:.
-│   .env
-│   .gitignore
-│   app.py
-│   db.py
-│   README.md
-│   requirement.txt
+Vehicle-Parking-App/
 │
-├───instance
-│       parking.db
+├── .env
+├── .gitignore
+├── app.py
+├── db.py
+├── README.md
+├── requirement.txt
 │
-├───models
-│   │   models.py
-│   │   __init__.py
+├── instance/
+│   └── parking.db
+│
+├── models/
+│   ├── models.py
+│   ├── __init__.py
+│   └── __pycache__/
+│       ├── models.cpython-313.pyc
+│       └── __init__.cpython-313.pyc
+│
+├── routes/
+│   ├── admin.py
+│   ├── auth.py
+│   ├── user.py
+│   ├── __init__.py
+│   └── __pycache__/
+│       ├── admin.cpython-313.pyc
+│       ├── auth.cpython-313.pyc
+│       ├── login.cpython-313.pyc
+│       ├── user.cpython-313.pyc
+│       └── __init__.cpython-313.pyc
+│
+├── static/
+│   ├── css/
+│   │   ├── admin_dashboard.css
+│   │   ├── baseadmin.css
+│   │   ├── baseuser.css
+│   │   └── home.css
 │   │
-│   └───__pycache__
-│           models.cpython-313.pyc
-│           __init__.cpython-313.pyc
+│   └── images/
+│       ├── avtar.png
+│       ├── parked_car.jpg
+│       └── parking_lot.jpg
 │
-├───routes
-│   │   admin.py
-│   │   auth.py
-│   │   user.py
-│   │   __init__.py
-│   │
-│   └───__pycache__
-│           admin.cpython-313.pyc
-│           auth.cpython-313.pyc
-│           login.cpython-313.pyc
-│           user.cpython-313.pyc
-│           __init__.cpython-313.pyc
-│
-├───static
-│   ├───css
-│   │       admin_dashboard.css
-│   │       baseadmin.css
-│   │       baseuser.css
-│   │       home.css
-│   │
-│   └───images
-│           avtar.png
-│           parked_car.jpg
-│           parking_lot.jpg
-│
-└───templates
-    │   baseadmin.html
-    │   baseuser.html
-    │   home.html
-    │   login.html
-    │   register.html
+└── templates/
+    ├── baseadmin.html
+    ├── baseuser.html
+    ├── home.html
+    ├── login.html
+    ├── register.html
     │
-    ├───admin
-    │       add_spot.html
-    │       admin_dashboard.html
-    │       create_lot.html
-    │       edit_lot.html
-    │       lot_details.html
-    │       search.html
-    │       user_list.html
-    │       view_spot.html
+    ├── admin/
+    │   ├── add_spot.html
+    │   ├── admin_dashboard.html
+    │   ├── create_lot.html
+    │   ├── edit_lot.html
+    │   ├── lot_details.html
+    │   ├── search.html
+    │   ├── user_list.html
+    │   └── view_spot.html
     │
-    └───user
-            book_spot.html
-            edit_profile.html
-            parking_details.html
-            profile.html
-            release_spot.html
-            user_dashboard.html
+    └── user/
+        ├── book_spot.html
+        ├── edit_profile.html
+        ├── parking_details.html
+        ├── profile.html
+        ├── release_spot.html
+        └── user_dashboard.html
+
 
 
 ## ER-Diagram
