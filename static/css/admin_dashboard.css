@@ -1,0 +1,19 @@
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.card-footer .btn {
+  min-width: 70px;
+}
+
+.btn-outline-success:hover,
+.btn-outline-danger:hover,
+.btn-outline-info:hover {
+  opacity: 0.9;
+}
+
+.badge {
+  font-size: 0.9rem;
+  padding: 0.5em 0.75em;
+}

@@ -1,0 +1,134 @@
+{% extends 'baseuser.html' %}
+{% block title %}User Search{% endblock %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }} alert-dismissible fade show text-center" role="alert">
+  {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="container mt-4">
+  <h3>Search Panel</h3>
+  <form method="GET" action="{{ url_for('user.search') }}" class="row g-3 align-items-center">
+    <div class="col-auto">
+      <select name="search_by" id="search_by" class="form-select" required>
+        <option value="" disabled selected>Search By</option>
+
+        <option value="prime_location_name">Lot Name</option>
+        <option value="lot_address">Lot Address</option>
+        <option value="pin_code_lot">Pin Code</option>
+        <option value="vehicle_number">Reservation Vehicle Number</option>
+        
+
+      </select>
+    </div>
+
+    <div class="col-auto">
+      <input type="text" name="query" id="query" class="form-control" placeholder="Search..." value="{{ query }}"
+        required>
+    </div>
+
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+
+  <!-- showing search -->
+  {% if results %}
+  <hr>
+  <h4 class="text-success text-center">Search Results for "{{ query }}" in "{{ search_by }}"</h4>
+
+  {% if search_by in ['lot_id', 'prime_location_name', 'lot_address', 'pin_code_lot'] %}
+  <div class="container mt-4">
+    <h4 class=" mt-4"><strong>Parking Lots</strong></h4><br>
+    <table class="table table-bordered">
+      <thead class="table-primary">
+        <tr>
+          <th>ID</th>
+          <th>Location Name</th>
+          <th>Address</th>
+          <th>Price/Hr</th>
+          <th>Availability</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for lot in results %}
+        <tr>
+          <td>{{ lot.id }}</td>
+          <td>{{ lot.prime_location_name }}</td>
+          <td>{{ lot.address }}</td>
+          <td>{{ lot.price }}</td>
+          <td>{{ lot.spots | selectattr('status.value', 'equalto', 'AVAILABLE') | list | length }}</td>
+          <td>
+            <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+              data-bs-target="#bookModal{{ lot.id }}">Book</button>
+            {% include 'user/book_spot.html' %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+  {% endif %}
+
+  {% if search_by == 'vehicle_number' %}
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>Reservation ID</th>
+          <th>Customer Name</th>
+          <th>User ID</th>
+          <th>Spot ID</th>
+          <th>Lot ID</th>
+          <th>Vehicle Number</th>
+          <th>Status</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in results %}
+        <tr>
+          <td>{{ r.id }}</td>
+          <td>{{ r.user.name }}</td>
+          <td>{{ r.user_id }}</td>
+          <td>{{ r.spot_id }}</td>
+          <td>{{ r.lot_id }}</td>
+          <td>{{ r.vehicle_number }}</td>
+          <td>{% if r.spot and r.spot.status %}
+            {% if  r.spot.status.value == 'AVAILABLE' %}
+            <span class="text-success">Parked out</span>
+            {% else %}
+            <span class="text-danger">Occupied</span>
+            {% endif %}
+            {% else %}
+            <span class="text-muted">None</span>
+            {% endif %}
+          </td>
+          <td>{{ r.start_time.strftime('%d-%m-%Y %H:%M') if r.start_time else '' }}</td>
+          <td>{{ r.end_time.strftime('%d-%m-%Y %H:%M') if r.end_time else '-' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+{% else %}
+  <hr>
+  <p class="text-danger text-center">No results found.</p>
+  
+</div>
+{% endif %}
+
+{% endblock %}
+

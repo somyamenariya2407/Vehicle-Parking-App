@@ -1,0 +1,90 @@
+{% extends 'baseadmin.html' %}
+
+{% block title %}View Parking Spot{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <h3 class="mb-4 text-center">Parking Spot Details</h3>
+
+  <div class="card shadow w-75 mx-auto">
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label><strong>Spot ID:</strong></label>
+          <p>{{ spot.id }}</p>
+        </div>
+        <div class="col-md-4">
+          <label><strong>Lot ID:</strong></label>
+          <p>{{ spot.lot.id }}</p>
+        </div>
+        <div class="col-md-4">
+          <label><strong>Status:</strong></label>
+          {% if spot.status.value == 'AVAILABLE' %}
+          <span class="badge bg-success">Available</span>
+          {% else %}
+          <span class="badge bg-danger">Occupied</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label><strong>Parking Lot:</strong></label>
+          <p>{{ spot.lot.prime_location_name }}</p>
+        </div>
+        <div class="col-md-4">
+          <label><strong>Lot Address:</strong></label>
+          <p>{{ spot.lot.address }}</p>
+        </div>
+      </div>
+
+      {% if spot.status.value == 'OCCUPIED' and reservation %}
+      <hr>
+      <h5 class="text-primary">Occupied Details</h5>
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label><strong>Vehicle Number:</strong></label>
+          <p>{{ reservation.vehicle_number }}</p>
+        </div>
+        <div class="col-md-4">
+          <label><strong>Customer ID:</strong></label>
+          <p>{{ reservation.user_id }}</p>
+        </div>
+        <div class="col-md-4">
+          <label><strong>Customer Name:</strong></label>
+          <p>{{ reservation.user.name}}</p>
+        </div>
+        <!-- <div class="col-md-6">
+          <label><strong>Customer Email:</strong></label>
+          <p>{{ spot.reservation.user.email }}</p>
+        </div> -->
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label><strong>Start Time:</strong></label>
+          <p>{{ reservation.start_time.strftime('%d-%m-%Y %I:%M %p') }}</p>
+        </div>
+
+        {% if reservation %}
+        {% set seconds = (now - reservation.start_time).total_seconds() %}
+        {% set hours = (seconds / 3600) %}
+        {% set est_cost = (hours * spot.lot.price) | round(2) %}
+        <div class="col-md-4">
+          <label><strong>Estimated Cost (₹):</strong></label>
+          <p>{{ est_cost or 'Pending' }}</p>
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="card-footer text-center">
+      <a href="{{ url_for('admin.delete_spot', spot_id=spot.id) }}"
+                                class="btn btn-outline-danger custom-delete-btn">Delete Spot</a>
+      <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary">Back</a>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

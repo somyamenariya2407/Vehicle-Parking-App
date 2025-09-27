@@ -1,0 +1,71 @@
+{% extends 'baseadmin.html' %}
+
+{% block title %}Users List{% endblock %}
+
+{% block head %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+    }
+
+    h2 {
+        text-align: center;
+        margin: 30px 0 20px;
+    }
+
+    table {
+        width: 90%;
+        margin: auto;
+        background-color: #fff;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #d9edf7;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h2>Registered Users</h2>
+
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Pincode</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                {% if user.role == 'user' %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.address }}</td>
+                        <td>{{ user.pincode }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

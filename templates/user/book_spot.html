@@ -1,0 +1,59 @@
+<div class="modal fade" id="bookModal{{ lot.id }}" tabindex="-1" aria-labelledby="bookModalLabel{{ lot.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <form method="POST" action="{{ url_for('user.book_spot' , lot_id=lot.id) }}">
+        <div class="modal-header">
+          <h5 class="modal-title" id="bookModalLabel{{ lot.id }}">Book Parking Spot</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Hidden inputs for backend -->
+          <input type="hidden" name="lot_id" value="{{ lot.id }}">
+          <input type="hidden" name="user_id" value="{{ user.id }}">
+
+          {% set available_spot = lot.spots | selectattr('status.value', 'equalto', 'AVAILABLE') | list | first %}
+          {% if available_spot %}
+            <input type="hidden" name="spot_id" value="{{ available_spot.id }}">
+
+            <div class="mb-2">
+              <label class="form-label">Spot ID:</label>
+              <input type="text" class="form-control" value="{{ available_spot.id }}" readonly>
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">Location:</label>
+              <input type="text" class="form-control" value="{{ lot.prime_location_name }}" readonly>
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">Lot ID:</label>
+              <input type="text" class="form-control" value="{{ lot.id }}" readonly>
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">User ID:</label>
+              <input type="text" class="form-control" value="{{ user.id }}" readonly>
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">Vehicle Number:</label>
+              <input type="text" class="form-control" name="vehicle_number" placeholder="Enter your vehicle number" required>
+            </div>
+          {% else %}
+            <div class="text-danger fw-semibold">No available spots in this lot.</div>
+          {% endif %}
+        </div>
+
+        <div class="modal-footer">
+          {% if available_spot %}
+            <button type="submit" class="btn btn-success">Reserve</button>
+          {% endif %}
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

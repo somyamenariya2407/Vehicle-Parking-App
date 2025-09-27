@@ -1,0 +1,68 @@
+{% extends 'baseuser.html' %}
+
+{% block content %}
+<div class="container-fluid mt-4 px-3">
+    <h2 class="text-light text-center mb-4">📊 Dashboard Summary</h2>
+    <div class="row gx-4 gy-4">
+
+        <!-- Chart 1: Reservation Count Over Time -->
+        <div class="col-md-6 d-flex align-items-stretch">
+            <div class="card p-3 w-100">
+                <h5 class="card-title text-center">Reservation Count Over Time</h5>
+                <canvas id="reservationCountChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Chart 2: Parking Lot Usage Distribution -->
+        <div class="col-md-6 d-flex align-items-stretch">
+            <div class="card p-3 w-100">
+                <h5 class="card-title text-center">Parking Lot Usage</h5>
+                <canvas id="lotUsageChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Chart 3: Monthly Cost Summary -->
+        <div class="col-md-6 d-flex align-items-stretch">
+            <div class="card p-3 w-100">
+                <h5 class="card-title text-center">Monthly Cost Summary</h5>
+                <canvas id="monthlyCostChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Chart 4: Reservation duration Overview -->
+        <div class="col-md-6 d-flex align-items-stretch">
+            <div class="card p-3 w-100">
+                <h5 class="card-title text-center">Reservation Duration</h5>
+                <canvas id="durationChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Pass chart data to JS -->
+<script>
+    const durationLabels = {{ duration_labels | tojson | safe }};
+    const durationData = {{ duration_data | tojson | safe }};
+
+    window.chartData = {
+
+    dates: {{ dates | tojson | safe }},
+    counts: {{ counts | tojson | safe }},
+    lot_labels: {{ lot_labels | tojson | safe }},
+    lot_data: {{ lot_data | tojson | safe }},
+    months: {{ months | tojson | safe }},
+    monthly_costs: {{ monthly_costs | tojson | safe }},
+    duration_labels: {{ duration_labels | tojson | safe }},
+    duration_data: {{ duration_data | tojson | safe }}
+    };
+</script>
+
+
+<!-- Styles and Chart Logic -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/charts.css') }}">
+<script src="{{ url_for('static', filename='js/user_dashboard.js') }}"></script>
+{% endblock %}

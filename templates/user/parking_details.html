@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Parking Details (Receipt)</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .full-height-center {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+             padding: 2rem 0;
+        }
+
+        .receipt-card {
+            width: 100%;
+            max-width: 650px;
+            border: 1px solid #dee2e6;
+            border-radius: 1rem;
+            box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.05);
+            background-color: #fff;
+            padding: 2rem;
+        }
+
+        .receipt-header {
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .receipt-header h2 {
+            margin: 0;
+        }
+
+        .receipt-body p {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container full-height-center py-4">
+        <div class="receipt-card">
+            <div class="receipt-header">
+                <h2 class="fw-bold">Parking Receipt</h2>
+                <p class="text-muted"><strong>Spot:</strong> {{ reservation.spot_id }}</p>
+            </div>
+
+            <div class="receipt-body">
+                <p><strong>Reservation ID:</strong> {{ reservation.id }}</p><br>
+                <p><strong>Name:</strong> {{ reservation.user.name }}</p><br>
+                <p><strong>Spot ID:</strong> {{ reservation.spot_id }}</p><br>
+                <p><strong>User ID:</strong> {{ reservation.user_id }}</p><br>
+                <p><strong>Vehicle Number:</strong> {{ reservation.vehicle_number }}</p><br>
+                <p><strong>Lot Location:</strong> {{ reservation.lot.prime_location_name }}</p><br>
+                <p><strong>Start Time:</strong> {{ reservation.start_time.strftime('%d-%m-%Y %I:%M %p') }}</p><br>
+                <p><strong>Releasing Time:</strong> {{ reservation.end_time.strftime('%d-%m-%Y %I:%M %p') }}</p><br>
+                <p><strong>Duration:</strong> {{ hours }} Hours {{ minutes }} Minutes</p><br>
+                <p><strong>Total Cost:</strong> ₹{{ reservation.cost if reservation.cost else "0.00" }}</p><br>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="{{ url_for('user.history') }}" class="btn btn-outline-dark">Back</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

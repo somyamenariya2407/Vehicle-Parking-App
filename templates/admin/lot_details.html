@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lot Details - {{ lot.prime_location_name }}</title>
+
+    <!-- Bootstrap CSS (no JS) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .spot-badge {
+            padding: 4px 10px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .A {
+            background-color: #28a745;
+        }
+
+        /* Green */
+        .O {
+            background-color: #dc3545;
+        }
+
+        /* Red */
+
+
+        .btn-outline-primary {
+            background-color: transparent;
+            border: 1px solid #337ab7;
+            color: #337ab7;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #337ab7;
+            color: white;
+        }
+
+        .mt-3 {
+            margin-top: 20px;
+        }
+
+        .mt-4 {
+            margin-top: 30px;
+        }
+
+        .custom-delete-btn {
+            border: 1px solid red;
+            color: red;
+            background-color: transparent;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .custom-delete-btn:hover {
+            background-color: red;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="card">
+            <h3>{{ lot.prime_location_name }} - Details</h3>
+            <p><strong>Address:</strong> {{ lot.address }}</p>
+            <p><strong>Pincode:</strong> {{ lot.pincode }}</p>
+            <p><strong>Price/hr:</strong> ₹{{ lot.price }}</p>
+            <p><strong>Total Spots:</strong> {{ lot.maximum_number_of_spots }}</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{category}} mt-3">
+
+                {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <h4 class="mt-4">Parking Spots</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="info">
+                        <th>Spot ID</th>
+                        <th>Status</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for spot in spots %}
+                    <tr>
+
+                        <td>{{ loop.index }}</td>
+                        <td>
+                            {% if spot.status.value == 'AVAILABLE' %}
+                            <span class="spot-badge A">Available</span>
+                            {% elif spot.status.value == 'OCCUPIED' %}
+                            <span class="spot-badge O">Occupied</span>
+
+                            {% else %}
+                            Unknown
+                            {% endif %}
+                        </td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="mt-3">
+                <a href="{{ url_for('admin.add_spot', lot_id=lot.id) }}" class="btn btn-outline-primary btn-sm">Add
+                    Spot</a>
+                <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-default">Back</a>
+            </div>
+
+
+        </div>
+    </div>
+
+</body>
+
+</html>

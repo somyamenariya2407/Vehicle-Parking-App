@@ -1,0 +1,172 @@
+{% extends 'baseadmin.html' %}
+{% block title %}Admin Search{% endblock %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }} alert-dismissible fade show text-center" role="alert">
+  {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="container mt-4">
+  <h3>Admin Search Panel</h3>
+  <form method="GET" action="{{ url_for('admin.search') }}" class="row g-3 align-items-center">
+    <div class="col-auto">
+      <select name="search_by" id="search_by" class="form-select" required>
+        <option value="" disabled selected>Search By</option>
+
+        <option value="user_id">User ID</option>
+        <option value="name">Username</option>
+        <option value="user_email">Email</option>
+        <option value="user_address">Address</option>
+        <option value="pin_code">Pin Code</option>
+        <option value="lot_id">Lot ID</option>
+        <option value="prime_location_name">Location Name</option>
+        <option value="lot_address">Lot Address</option>
+        <option value="pin_code_lot">Lot Pin Code</option>
+        <option value="reservation_id">Reservation ID</option>
+
+
+      </select>
+    </div>
+
+    <div class="col-auto">
+      <input type="text" name="query" id="query" class="form-control" placeholder="Search..." value="{{ query }}"
+        required>
+    </div>
+
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+
+  <!-- showing search -->
+  {% if results %}
+  <hr>
+  <h4 class="text-success text-center">Search Results for "{{ query }}" in "{{ search_by }}"</h4>
+
+  <!-- User Table -->
+  {% if search_by in ['user_id', 'name', 'user_email', 'user_address','pin_code'] %}
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>User ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>Pincode</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in results %}
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.address }}</td>
+          <td>{{ user.pincode }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  {% if search_by in ['lot_id', 'prime_location_name', 'lot_address', 'pin_code_lot'] %}
+  <div class="container">
+    <div class="row">
+      {% for lot in results %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title text-primary">{{ lot.prime_location_name }} # {{ lot.id }}</h5>
+            <p><strong>Address:</strong> {{ lot.address }}</p>
+            <p><strong>Price/Hour:</strong> ₹{{ lot.price }}</p>
+            <p><strong>Total Spots:</strong> {{ lot.maximum_number_of_spots }}</p>
+
+            <!-- Spot Buttons -->
+            <div class="mb-2">
+              {% for spot in lot.spots %}
+              {% if spot.status.value == 'AVAILABLE' %}
+              <a href="{{ url_for('admin.view_spot', spot_id=spot.id) }}" class="btn btn-sm btn-outline-success mb-1">
+                A
+              </a>
+              {% else %}
+              <a href="{{ url_for('admin.view_spot', spot_id=spot.id) }}" class="btn btn-sm btn-outline-danger mb-1">
+                O
+              </a>
+              {% endif %}
+              {% endfor %}
+            </div>
+
+            <p class="text-success"><strong>Available:</strong> {{ lot.spots|selectattr('status.value', 'equalto',
+              'AVAILABLE')|list|length }}</p>
+            <p class="text-danger"><strong>Occupied:</strong> {{ lot.spots|selectattr('status.value', 'equalto',
+              'OCCUPIED')|list|length }}</p>
+          </div>
+          <div class="card-footer d-flex justify-content-center gap-2">
+            <a href="{{ url_for('admin.edit_lot', lot_id=lot.id) }}" class="btn btn-success btn-sm w-100">Edit</a>
+            <a href="{{ url_for('admin.delete_lot', lot_id=lot.id) }}" class="btn btn-danger btn-sm w-100">Delete</a>
+            <a href="{{ url_for('admin.lot_details', lot_id=lot.id) }}" class="btn btn-info btn-sm w-100">Details</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if search_by == 'reservation_id' %}
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>Reservation ID</th>
+          <th>Customer Name</th>
+          <th>User ID</th>
+          <th>Spot ID</th>
+          <th>Lot ID</th>
+          <th>Vehicle Number</th>
+          <th>Status</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in results %}
+        <tr>
+          <td>{{ r.id }}</td>
+          <td>{{ r.user.name }}</td>
+          <td>{{ r.user_id }}</td>
+          <td>{{ r.spot_id }}</td>
+          <td>{{ r.lot_id }}</td>
+          <td>{{ r.vehicle_number }}</td>
+          <td>{% if r.spot.status.value == 'AVAILABLE' %}
+            <span class="text-success">Parked out</span>
+            {% else %}
+            <span class="text-danger">Occupied</span>
+            {% endif %}
+          </td>
+          <td>{{ r.start_time.strftime('%d-%m-%Y %H:%M') if r.start_time else '' }}</td>
+          <td>{{ r.end_time.strftime('%d-%m-%Y %H:%M') if r.end_time else '-' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  {% else %}
+  <hr>
+  <p class="text-danger text-center">No results found.</p>
+  
+</div>
+{% endif %}
+{% endblock %}
